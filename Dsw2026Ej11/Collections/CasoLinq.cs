@@ -1,4 +1,6 @@
-﻿namespace Dsw2026Ej11.Collections;
+﻿using Dsw2026Ej11.Domain;
+
+namespace Dsw2026Ej11.Collections;
 
 /*
  * Para cada punto crear un método que permita:
@@ -16,4 +18,26 @@
  */
 public class CasoLinq
 {
+    private static List<Libro> _libros = Libro.CrearLista();
+    public static Libro? GetPrimero() => _libros.FirstOrDefault();
+    public static Libro? GetUltimo() => _libros.LastOrDefault();
+    public static Decimal GetTotalPrecios() => (from libro in _libros select libro.Precio).Sum();
+    public static Decimal GetPromedioPrecios() => (from libro in _libros select libro.Precio).Average();
+    public static List<Libro> GetListById() => (from libro in _libros where libro.Id > 15 select libro).ToList();
+    public static List<string> GetLibros()
+    {
+        var librosEnumerados = from libro in _libros select (libro.Titulo, string.Format("{0:c}", libro.Precio));
+        var libros = new List<string>();
+        foreach (var libroEnum in librosEnumerados)
+        {
+            libros.Add(libroEnum.ToString());
+        }
+        return libros;
+
+    }
+    public static List<string> GetLibrosAcortado() => (from libro in _libros select (libro.Titulo, string.Format("{0:c}", libro.Precio)).ToString()).ToList();
+    public static Libro? GetMayorPrecio() => (from libro in _libros orderby libro.Precio descending select libro).FirstOrDefault();
+    public static Libro? GetMenorPrecio() => (from libro in _libros orderby libro.Precio select libro).FirstOrDefault();
+    public static List<Libro>? GetMayorPromedio() => (from libro in _libros where libro.Precio > GetPromedioPrecios() select libro).ToList();
+    public static List<Libro>? GetLibrosOrdenados() => (from libro in _libros orderby libro.Titulo descending select libro).ToList();
 }
